@@ -1,7 +1,7 @@
 const http = require("http");
 const url = require("url");
 const fs = require("fs");
-
+const replaceTemplate = require("./helper/replaceTemplate");
 const tempOverview = fs
   .readFileSync(`${__dirname}/templates/template-overview.html`)
   .toString();
@@ -16,20 +16,6 @@ const tempProduct = fs
 
 const mainData = fs.readFileSync(`${__dirname}/dev-data/data.json`);
 const mainDataObj = JSON.parse(mainData);
-
-const replaceTemplate = (templateHTML, data) => {
-  let output = templateHTML.replace(/{%PRODUCTNAME%}/g, data.productName);
-  output = output.replace(/{%QUANTITY%}/g, data.quantity);
-  output = output.replace(/{%IMAGE%}/g, data.image);
-  output = output.replace(/{%FROM%}/g, data.from);
-  output = output.replace(/{%NUTRIENTS%}/g, data.nutrients);
-  output = output.replace(/{%PRICE%}/g, data.price);
-  output = output.replace(/{%ORGANIC%}/g, data.organic);
-  output = output.replace(/{%DESCRIPTION%}/g, data.description);
-  output = output.replace(/{%ID%}/g, data.id);
-  output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
-  return output;
-};
 
 const server = http.createServer((req, res) => {
   //remember req.url is something like: /product?id=2498 or anything user requested.
@@ -52,7 +38,6 @@ const server = http.createServer((req, res) => {
     res.end(outputOverview);
   } else if (pathName === "/product") {
     const output = replaceTemplate(tempProduct, mainDataObj[id]);
-
     res.writeHead(200, {
       "Content-type": "text/html",
     });
