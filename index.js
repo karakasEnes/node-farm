@@ -32,11 +32,11 @@ const replaceTemplate = (templateHTML, data) => {
 };
 
 const server = http.createServer((req, res) => {
-  const pathName = req.url;
-
-  const reqUrl = new URL(req.url, "127.0.0.1");
-
-  console.log(reqUrl);
+  //remember req.url is something like: /product?id=2498 or anything user requested.
+  const baseURL = `http://${req.headers.host}`;
+  const requestURL = new URL(req.url, baseURL);
+  const { pathname: pathName } = requestURL;
+  const id = requestURL.searchParams.get("id");
 
   //overview
   if (pathName === "/" || pathName === "/overview") {
@@ -50,8 +50,16 @@ const server = http.createServer((req, res) => {
 
     const outputOverview = tempOverview.replace("{%PRODUCT_CARDS%}", cardsHtml);
     res.end(outputOverview);
-  } else if (pathName === "/product?") {
-    console.log(req.url);
+  } else if (pathName === "/product") {
+    const output = replaceTemplate(tempProduct, mainDataObj[id]);
+
+    res.writeHead(200, {
+      "Content-type": "text/html",
+    });
+
+    res.end(output);
+  } else {
+    res.end("wrong request");
   }
 });
 
