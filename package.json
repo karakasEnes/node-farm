@@ -1,6 +1,23 @@
 {
+  "name": "1-node-farm",
+  "version": "1.0.0",
+  "description": "course project by jonas",
+  "main": "index.js",
   "dependencies": {
     "nodemon": "^2.0.13",
     "slugify": "^1.6.1"
-  }
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pyxmaster/node-farm.git"
+  },
+  "author": "Enes Karakas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pyxmaster/node-farm/issues"
+  },
+  "homepage": "https://github.com/pyxmaster/node-farm#readme"
 }

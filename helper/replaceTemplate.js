@@ -1,4 +1,6 @@
 module.exports = (templateHTML, data) => {
+  // console.log(templateHTML);
+  console.log(data);
   let output = templateHTML.replace(/{%PRODUCTNAME%}/g, data.productName);
   output = output.replace(/{%QUANTITY%}/g, data.quantity);
   output = output.replace(/{%IMAGE%}/g, data.image);

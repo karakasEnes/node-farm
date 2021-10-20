@@ -1,6 +1,8 @@
 const http = require("http");
 const url = require("url");
 const fs = require("fs");
+const slugify = require("slugify");
+
 const replaceTemplate = require("./helper/replaceTemplate");
 const tempOverview = fs
   .readFileSync(`${__dirname}/templates/template-overview.html`)
@@ -12,10 +14,9 @@ const tempProduct = fs
   .readFileSync(`${__dirname}/templates/template-product.html`)
   .toString();
 
-// console.log(tempCard);
-
 const mainData = fs.readFileSync(`${__dirname}/dev-data/data.json`);
 const mainDataObj = JSON.parse(mainData);
+// console.log(mainDataObj);
 
 const server = http.createServer((req, res) => {
   //remember req.url is something like: /product?id=2498 or anything user requested.
@@ -23,6 +24,7 @@ const server = http.createServer((req, res) => {
   const requestURL = new URL(req.url, baseURL);
   const { pathname: pathName } = requestURL;
   const id = requestURL.searchParams.get("id");
+  console.log(requestURL.searchParams);
 
   //overview
   if (pathName === "/" || pathName === "/overview") {
@@ -37,7 +39,8 @@ const server = http.createServer((req, res) => {
     const outputOverview = tempOverview.replace("{%PRODUCT_CARDS%}", cardsHtml);
     res.end(outputOverview);
   } else if (pathName === "/product") {
-    const output = replaceTemplate(tempProduct, mainDataObj[id]);
+    if (!id) res.end("please enter an ID number of the product.");
+    let output = replaceTemplate(tempProduct, mainDataObj[id]);
     res.writeHead(200, {
       "Content-type": "text/html",
     });
